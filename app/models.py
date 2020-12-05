@@ -33,3 +33,16 @@ class Blog(db.Model):
     def __repr__(self):
         return f'User {self.blog_message}'
 
+class Comment(db.Model):
+    '''
+    Comment class to create a comment model
+    '''
+
+    __tablename__ = 'comments'
+
+    id = db.Column(db.Integer, primary_key = True)
+    comment_message = db.Column(db.String(255))
+    published_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f'User {self.comment_message}'
