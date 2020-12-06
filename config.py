@@ -3,7 +3,7 @@ class Config:
     General configuration parent class
     '''
     SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://amandine:pass@localhost/blog'
-    pass
+    UPLOADED_PHOTOS_DEST = 'app/static/photos'
 
 class DevConfig(Config):
     '''
