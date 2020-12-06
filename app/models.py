@@ -1,6 +1,7 @@
 from . import db
 from datetime import datetime
 
+
 class Writer(db.Model):
     '''
     Writer class to create a writer model
