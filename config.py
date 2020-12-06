@@ -8,6 +8,9 @@ class Config:
     SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://amandine:pass@localhost/blog'
     UPLOADED_PHOTOS_DEST = 'app/static/photos'
 
+class TestConfig(Config):
+    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://amandine:pass@localhost/blog_test'
+
 class DevConfig(Config):
     '''
     Development configuration child class
@@ -15,7 +18,7 @@ class DevConfig(Config):
     Args:
         Config: The parent configuration class with general configuration settings
     '''
-
+    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://amandine:pass@localhost/blog'
     DEBUG = True
 
 class ProdConfig(Config):
@@ -29,5 +32,6 @@ class ProdConfig(Config):
 
 config_options = {
     'development' : DevConfig(),
-    'production' : ProdConfig()
+    'production' : ProdConfig(),
+    'test' : TestConfig()
 }
