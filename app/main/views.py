@@ -4,14 +4,16 @@ from . import main
 from ..models import Blog, Comment
 from flask_login import login_required, current_user
 from .forms import BlogRegistrationForm, CommentForm
+from ..requests import get_quote
 
 @main.route("/", methods = ["GET"])
 def index():
 
     #Get all blogs
     all_blogs = Blog.display_all_blogs()
+    random_quote = get_quote()
 
-    return render_template('main/index.html', all_blogs = all_blogs)
+    return render_template('main/index.html', all_blogs = all_blogs, quote = random_quote)
 
 @main.route('/blog/new', methods = ['GET', 'POST'])
 @login_required

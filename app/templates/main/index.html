@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
     <h1>Welcome</h1>
+    <h2>Random Quote</h2>
+    <p>
+        {{ quote.quote}}
+        <small>By {{ quote.quote_author}}</small>
+    </p>
     {% if all_blogs %}
         {% for blog in all_blogs%}
             <p>

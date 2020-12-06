@@ -9,6 +9,16 @@ def load_user(writer_id):
     return Writer.query.get(int(writer_id))
 
 
+class Quote:
+    '''
+    Quote class to define Quote object
+    '''
+
+    def __init__(self, id, author, quote):
+        self.quote_id = id
+        self.quote_author = author
+        self.quote = quote
+
 class Writer(UserMixin, db.Model):
     '''
     Writer class to create a writer model
