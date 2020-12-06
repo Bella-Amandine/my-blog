@@ -1,4 +1,29 @@
 {% extends 'base.html' %}
 {% block content %}
     <h1>Welcome</h1>
+    {% if all_blogs %}
+        {% for blog in all_blogs%}
+            <p>
+                {{ blog.blog_message }}
+            </p>
+            <a href="{{url_for('main.add_comment', id = blog.id)}}" class="btn">Comment</a>
+            <a href="{{url_for('main.update_blog', id = blog.id)}}" class="btn btn-warning">Edit Blog message</a>
+            <a href="{{url_for('main.delete_blog', id = blog.id)}}" class="btn btn-danger">Delete Blog</a>
+        {% endfor %}
+    {% else %}
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8">
+                        <div class="alert alert-info">
+                            There is no blogs available for now
+                            <br>
+                            <a href="{{url_for('main.save_new_blog')}}" class="btn btn-primary">Create a blog</a>
+                        </div>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+            </div>
+        
+    {% endif%}
 {% endblock%}

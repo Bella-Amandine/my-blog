@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block content %}
+    <h1>Comment</h1>
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-6">
+                        {{ wtf.quick_form(comment_form)}}
+                    </div>
+                    <div class="col-md-3"></div>
+                </div>
+            </div>
+{% endblock%}

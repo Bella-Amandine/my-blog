@@ -78,14 +78,24 @@ class Blog(db.Model):
         db.session.add(self)
         db.session.commit()
 
-    def update_blog(self, id, new_message):
+    @classmethod
+    def get_single_blog(cls, blog_id):
+        '''
+        Function to retreive single blog in the database
+        '''
+        return Blog.query.get(blog_id)
+
+    @classmethod
+    def update_blog(cls, id, new_message):
         '''
         Function to update a blog
         '''
-        blog_to_update = Blog.query.filter_by(id = id).first().update({"blog_message" : new_message})
+        blog_to_update = Blog.query.filter_by(id = id).update({"blog_message" : new_message})
+        # blog_to_update.query.update({"blog_message" : new_message})
         db.session.commit()
 
-    def delete_blog(self, id):
+    @classmethod
+    def delete_blog(cls, id):
         '''
         Function to delete a blog
         '''
