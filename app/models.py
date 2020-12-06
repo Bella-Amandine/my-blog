@@ -24,6 +24,14 @@ class Writer(UserMixin, db.Model):
     pass_secure = db.Column(db.String(255))
     blogs = db.relationship('Blog', backref = 'writer', lazy = "dynamic")
 
+
+    def save_writer(self):
+        '''
+        Function to save writer into the database
+        '''
+        db.session.add(self)
+        db.session.commit()
+
     @property
     def password(self):
         raise AttributeError("You cannot read the password attribute")
@@ -34,6 +42,7 @@ class Writer(UserMixin, db.Model):
 
     def verify_password(self, password):
         return check_password_hash(self.pass_secure, password)
+
 
     def __repr__(self):
         return f'User {self.email}'
