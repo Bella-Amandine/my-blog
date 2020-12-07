@@ -5,7 +5,6 @@ class Config:
     '''
     QUOTE_API_URL = 'http://quotes.stormconsultancy.co.uk/random.json'
     SECRET_KEY = os.environ.get('SECRET_KEY')
-    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://amandine:pass@localhost/blog'
     UPLOADED_PHOTOS_DEST = 'app/static/photos'
 
 class TestConfig(Config):
@@ -31,7 +30,7 @@ class ProdConfig(Config):
     pass
 
 config_options = {
-    'development' : DevConfig(),
-    'production' : ProdConfig(),
-    'test' : TestConfig()
+    'development' : DevConfig,
+    'production' : ProdConfig,
+    'test' : TestConfig
 }
