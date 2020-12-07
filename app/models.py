@@ -140,7 +140,7 @@ class Comment(db.Model):
 
 
     @classmethod
-    def get_comment_by_id(self, id):
+    def get_comment_by_id(cls, id):
         '''
         Function to retreive a specific comment from the db
         '''
