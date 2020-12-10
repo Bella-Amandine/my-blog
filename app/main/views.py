@@ -1,9 +1,9 @@
 from flask import render_template, redirect, url_for, abort
 from .. import db
 from . import main
-from ..models import Blog, Comment
+from ..models import Blog, Comment, Writer
 from flask_login import login_required, current_user
-from .forms import BlogRegistrationForm, CommentForm
+from .forms import BlogRegistrationForm, CommentForm, UpdateProfile
 from ..requests import get_quote
 
 @main.route("/", methods = ["GET"])
@@ -13,7 +13,39 @@ def index():
     all_blogs = Blog.display_all_blogs()
     random_quote = get_quote()
 
-    return render_template('main/index.html', all_blogs = all_blogs, quote = random_quote)
+    return render_template('main/index.html', quote = random_quote)
+
+@main.route('/user/<uname>', methods = ["GET"])
+@login_required
+def writer_profile(uname):
+    writer = Writer.query.filter_by(email = uname).first()
+
+    if writer is None:
+        abort()
+    
+    writer_blogs = writer.blogs
+
+    return render_template("profile/profile.html", writer = writer, blogs = writer_blogs)
+
+@main.route('/user/profile/update/<uname>', methods = ["GET"])
+@login_required
+def update_profile(uname):
+    writer = Writer.query.filter_by(email = uname).first()
+
+    if writer is None:
+        abort()
+
+    form = UpdateProfile()
+    if form.validate_on_submit():
+        writer.bio = form.bio.data 
+
+        db.session.add(writer)
+        db.session.commit()
+
+        return redirect(url_for('.writer_profile', uname = writer.email))
+
+    return render_template('profile/update-profile-form.html', update_form = form)
+    
 
 @main.route('/blog/new', methods = ['GET', 'POST'])
 @login_required
@@ -29,7 +61,29 @@ def save_new_blog():
 
     return render_template('main/new-blog.html', blog_form = form)
 
-@main.route('/blog/<int:id>', methods = ['GET', 'POST'])
+
+@main.route('/blog/all', methods = ["GET"])
+def get_all_blogs():
+
+    #Get all blogs
+    all_blogs = Blog.display_all_blogs()
+
+    return render_template('main/blog-list.html', blogs = all_blogs)
+
+
+@main.route('/blog/<int:id>', methods = ["GET"])
+def display_single_blog(id):
+    single_blog = Blog.get_single_blog(id)
+    blog_comments = single_blog.comments
+
+    if single_blog is None:
+        abort(404)
+    
+    else:
+        return render_template('main/single-blog.html', blog = single_blog, comments = blog_comments)
+
+
+@main.route('/blog/update/<int:id>', methods = ['GET', 'POST'])
 @login_required
 def update_blog(id):
 

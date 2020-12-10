@@ -1,0 +1,48 @@
+{% macro displayAllBlogs(blog_list)%}
+
+    {% for blog in blog_list%}
+        {% if blog.blog_pic_path %}
+        <div class="card">
+            <img src="{{url_for('static', filename=blog.blog_pic_path)}}" alt="" class="img-fluid card-img-top">
+            <div class="card-body">
+                <!-- <h4 class="card-title">Blog Post One</h4> -->
+                <small class="text-muted">Written by {{blog.writer.fullname}} on {{blog.posted_date}}</small>
+                <hr>
+                <p class="card-text">
+                    {{blog.blog_message}}
+                </p>
+            </div>
+            <div class="card-footer">
+                <a href="{{url_for('main.display_single_blog', id = blog.id)}}" class="btn btn-info">Comments</a>
+            </div>
+        </div>
+        {% else %}
+        <div class="card p-3 bg-danger text-white">
+            <blockquote class="card-blockquote card-body">
+                <p>
+                    {{blog.blog_message}}
+                </p>
+                <footer class="blockquote-footer">
+                    <small class="text-white">Written by {{blog.writer.fullname}} on {{blog.posted_date}}</small>
+                </footer>
+            </blockquote>
+
+            <a href="{{url_for('main.display_single_blog', id = blog.id)}}" class="btn btn-info">comments</a>
+         </div>
+        {% endif %}
+    {% endfor %}
+
+{% endmacro %}
+
+{% macro displayComments(comments) %}
+    {% for comment in comments %}
+
+    <li class="list-group-item">
+        <small class="text-muted">{{ comment.user_name}}</small>
+        <br>
+        <p class="lead">{{ comment.comment_message}}</p>
+        <small class="text-muted">{{ comment.published_at}}</small>
+    </li>
+
+    {% endfor %}
+{% endmacro %}

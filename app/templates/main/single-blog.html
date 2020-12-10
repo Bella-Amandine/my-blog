@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% import 'main/macros.html' as macro %}
+
+{% block styles %}
+    {{super()}}
+    <link rel="stylesheet" href="{{url_for('static', filename='css/styles.css')}}">
+{% endblock%}
+
+{% block content %}
+<header id="page-header">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 m-auto text-center text-white">
+          <h1>Blog</h1>
+        </div>
+      </div>
+    </div>
+  </header>
+
+ <!--BLOG SECTION-->
+ <section id="blog" class="py-3">
+     <div class="container">
+         <div class="row">
+             <div class="col-md-6">
+                     <div class="card">
+                         <img src="https://source.unsplash.com/random/300x200" alt="" class="img-fluid card-img-top">
+                         <div class="card-body">
+                             <h4 class="card-title">Blog Post One</h4>
+                             <small class="text-muted">Written by {{blog.writer.fullname}} on {{blog.posted_date}}</small>
+                             <hr>
+                             <p class="card-text">
+                                {{ blog.blog_message }}
+                             </p>
+                         </div>
+                     </div>
+             </div>
+             <div class="col-md-6">
+    
+                 <div class="row">
+                     <div class="col-2"></div>
+                     <div class="col-10">
+                         <form action="">
+                             <div class="form-group">
+                                 <label for="user-name">Your Name</label>
+                                 <input type="text" class="form-control">
+                                 <label for="comment">Your Comment</label>
+                                 <input type="text" class="form-control">
+                             </div>
+                         </form>
+                     </div>
+                 </div>
+
+                 <div class="row">
+                     <div class="col-2"></div>
+                     <div class="col-10">
+                        <h2 class="text-center">Comments</h2>
+                        <hr>
+                        {% if comments%}
+                        <div class="card" style="width: 28rem;">
+                            <ul class="list-group list-group-flush">
+                              {{ macro.displayComments(comments)}}
+                            </ul>
+                        </div>
+                        {% else %}
+                        <p class="text-muted">O comments</p>
+                        {% endif %}
+
+                     </div> 
+                 </div>
+             </div>
+         </div>
+     </div>
+ </section>
+{% endblock %}

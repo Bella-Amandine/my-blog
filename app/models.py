@@ -42,6 +42,7 @@ class Writer(UserMixin, db.Model):
         db.session.add(self)
         db.session.commit()
 
+
     @property
     def password(self):
         raise AttributeError("You cannot read the password attribute")
@@ -54,8 +55,6 @@ class Writer(UserMixin, db.Model):
         return check_password_hash(self.pass_secure, password)
 
 
-    def __repr__(self):
-        return f'User {self.email}'
 
 class Blog(db.Model):
     '''
@@ -114,8 +113,8 @@ class Blog(db.Model):
         db.session.commit()
 
 
-    def __repr__(self):
-        return f'User {self.blog_message}'
+    # def __repr__(self):
+    #     return f'User {self.blog_message}'
 
 class Comment(db.Model):
     '''
@@ -162,5 +161,5 @@ class Comment(db.Model):
         db.session.delete(self)
         db.session.commit()
 
-    def __repr__(self):
-        return f'User {self.comment_message}'
+    # def __repr__(self):
+    #     return f'User {self.comment_message}'
