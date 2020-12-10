@@ -35,7 +35,7 @@
 
 {% endmacro %}
 
-{% macro displayComments(comments) %}
+{% macro displayComments(comments, current_user_email, writer_email) %}
     {% for comment in comments %}
 
     <li class="list-group-item">
@@ -43,6 +43,10 @@
         <br>
         <p class="lead">{{ comment.comment_message}}</p>
         <small class="text-muted">{{ comment.published_at}}</small>
+
+        {% if current_user_email == writer_email %}
+        <a href="" class="btn">Delete Comment </a>
+        {% endif %}
     </li>
 
     {% endfor %}
