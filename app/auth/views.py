@@ -25,7 +25,7 @@ def login():
         writer = Writer.query.filter_by(email = form.email.data).first()
         if writer is not None and writer.verify_password(form.password.data):
             login_user(writer, form.remember.data)
-            return redirect(request.args.get('next') or url_for('main.index'))
+            return redirect(request.args.get('next') or url_for('main.writer_profile', uname = writer.email))
 
         flash('Invalid username or Password')
 

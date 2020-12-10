@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% import 'main/macros.html' as macro %}
+{% import 'bootstrap/wtf.html' as wtf %}
 
 {% block styles %}
     {{super()}}
@@ -11,7 +12,7 @@
     <div class="container">
       <div class="row">
         <div class="col-md-6 m-auto text-center text-white">
-          <h1>Blog</h1>
+          <h1>{{blog.blog_title}}</h1>
         </div>
       </div>
     </div>
@@ -25,13 +26,19 @@
                      <div class="card">
                          <img src="https://source.unsplash.com/random/300x200" alt="" class="img-fluid card-img-top">
                          <div class="card-body">
-                             <h4 class="card-title">Blog Post One</h4>
+                             <h4 class="card-title">{{ blog.blog_title }}</h4>
                              <small class="text-muted">Written by {{blog.writer.fullname}} on {{blog.posted_date}}</small>
                              <hr>
                              <p class="card-text">
                                 {{ blog.blog_message }}
                              </p>
                          </div>
+                         {% if current_user.is_authenticated %}
+                         <div class="card-footer">
+                            <a href="{{url_for('main.update_blog', id = blog.id)}}" class="btn btn-warning">Edit Blog</a>
+                            <a href="{{url_for('main.delete_blog', id = blog.id)}}" class="btn btn-danger">Delete Blog</a>
+                         </div>
+                         {% endif%}
                      </div>
              </div>
              <div class="col-md-6">
@@ -39,14 +46,12 @@
                  <div class="row">
                      <div class="col-2"></div>
                      <div class="col-10">
-                         <form action="">
-                             <div class="form-group">
-                                 <label for="user-name">Your Name</label>
-                                 <input type="text" class="form-control">
-                                 <label for="comment">Your Comment</label>
-                                 <input type="text" class="form-control">
-                             </div>
-                         </form>
+                        <div class="card">
+                            <div class="card-form">
+                                <div class="card-title"><h3>Add Comment</h3></div>
+                                {{ wtf.quick_form(comment_form)}}
+                            </div>
+                        </div>
                      </div>
                  </div>
 
@@ -55,14 +60,14 @@
                      <div class="col-10">
                         <h2 class="text-center">Comments</h2>
                         <hr>
-                        {% if comments%}
+                        {% if comments %}
                         <div class="card" style="width: 28rem;">
                             <ul class="list-group list-group-flush">
                               {{ macro.displayComments(comments)}}
                             </ul>
                         </div>
                         {% else %}
-                        <p class="text-muted">O comments</p>
+                        <p class="text-muted text-center">O comments</p>
                         {% endif %}
 
                      </div> 

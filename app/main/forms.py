@@ -3,6 +3,7 @@ from wtforms import StringField,TextAreaField, SubmitField
 from wtforms.validators import Required
 
 class BlogRegistrationForm(FlaskForm):
+    blog_title = StringField('Blog Title', validators = [Required()])
     blog_message = TextAreaField('Blog Message', validators = [Required()])
     submit = SubmitField('Submit')
 

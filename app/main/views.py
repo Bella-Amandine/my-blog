@@ -54,10 +54,10 @@ def save_new_blog():
     form = BlogRegistrationForm()
 
     if form.validate_on_submit():
-        new_blog = Blog(blog_message = form.blog_message.data, writer_id = current_user.id)
+        new_blog = Blog(blog_title = form.blog_title.data ,blog_message = form.blog_message.data, writer = current_user)
         new_blog.create_blog()
 
-        return redirect(url_for('main.index'))
+        return redirect(url_for('main.writer_profile', uname = current_user.email))
 
     return render_template('main/new-blog.html', blog_form = form)
 
@@ -71,16 +71,26 @@ def get_all_blogs():
     return render_template('main/blog-list.html', blogs = all_blogs)
 
 
-@main.route('/blog/<int:id>', methods = ["GET"])
+@main.route('/blog/<int:id>', methods = ["GET", "POST"])
 def display_single_blog(id):
+
     single_blog = Blog.get_single_blog(id)
-    blog_comments = single_blog.comments
+    print(single_blog.blog_title)
 
     if single_blog is None:
         abort(404)
-    
+
     else:
-        return render_template('main/single-blog.html', blog = single_blog, comments = blog_comments)
+        blog_comments = single_blog.comments
+        form = CommentForm()
+
+        if form.validate_on_submit():
+            comment = Comment(user_name = form.user_name.data, comment_message = form.comment.data, blog = single_blog)
+            comment.create_comment()
+
+            return redirect(url_for('main.display_single_blog', id = single_blog.id))
+
+    return render_template('main/single-blog.html', blog = single_blog, comments = blog_comments, comment_form = form)
 
 
 @main.route('/blog/update/<int:id>', methods = ['GET', 'POST'])
@@ -92,33 +102,37 @@ def update_blog(id):
     if form.validate_on_submit():
         blog_to_update = Blog.get_single_blog(id)
         if blog_to_update is not None:
-            blog_to_update.update_blog(id, form.blog_message.data)
-            # blog_to_update.blog_message = form.blog_message.data
-            # db.session.add(blog_to_update)
-            # db.session.commit()
-            return redirect(url_for('main.index'))
+            # blog_to_update.update_blog(id, form.blog_message.data)
+            blog_to_update.blog_message = form.blog_message.data
+            blog_to_update.blog_title = form.blog_title.data
+            db.session.add(blog_to_update)
+            db.session.commit()
+            return redirect(url_for('main.display_single_blog', id = blog_to_update.id))
         else :
             abort(404)
 
     return render_template('main/update-blog.html', blog_form = form)
+    
 
 @main.route('/blog/delete/<int:id>', methods = ['GET'])
 @login_required
 def delete_blog(id):
     Blog.delete_blog(id)
-    return redirect(url_for('main.index'))
+    return redirect(url_for('main.writer_profile', uname = current_user.email))
+
 
 @main.route('/blog/comment/<int:id>', methods = ['GET', 'POST'])
 def add_comment(id):
 
     form = CommentForm()
+
     if form.validate_on_submit():
         blog = Blog.get_single_blog(id)
         if blog is not None:
-            comment = Comment(user_name = form.user_name.data, comment_message = form.comment.data, blog_id = id)
+            comment = Comment(user_name = form.user_name.data, comment_message = form.comment.data, blog = blog)
             comment.create_comment()
 
-            return redirect(url_for('main.index'))
+            return redirect(url_for('main.display_single_blog', id = blog.id))
 
         else :
             abort(404)

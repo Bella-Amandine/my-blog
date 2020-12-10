@@ -5,7 +5,7 @@
         <div class="card">
             <img src="{{url_for('static', filename=blog.blog_pic_path)}}" alt="" class="img-fluid card-img-top">
             <div class="card-body">
-                <!-- <h4 class="card-title">Blog Post One</h4> -->
+                <h4 class="card-title">{{ blog.blog_title }}</h4>
                 <small class="text-muted">Written by {{blog.writer.fullname}} on {{blog.posted_date}}</small>
                 <hr>
                 <p class="card-text">
@@ -17,8 +17,9 @@
             </div>
         </div>
         {% else %}
-        <div class="card p-3 bg-danger text-white">
+        <div class="card p-3 bg-dark text-white">
             <blockquote class="card-blockquote card-body">
+                <h4 class="card-title">{{ blog.blog_title }}</h4>
                 <p>
                     {{blog.blog_message}}
                 </p>
