@@ -14,10 +14,15 @@
           <!--Displaying writer profile pic-->
           <div class="col-md-4">
               {% if writer.profile_pic_path %}
-              <img src="{{writer.profile_pic_path}}" alt="writer profile picture" class="img-fluid">
+              <img src="{{url_for('static', filename=writer.profile_pic_path)}}" alt="writer profile picture" class="img-fluid">
               {% else %}
-                <h3>No Profile Pic available</h3>
+              <img src="{{url_for('static', filename='image/image/default.jpg')}}" alt="default writer profile picture" class="img-fluid">
               {% endif %} 
+
+                <form action="{{url_for('main.update_writer_pic', uname=writer.email)}}" method="POST" enctype="multipart/form-data">
+                    <input type="file" name="photo" class="form-control" required>
+                    <input type="submit" value="Submit">
+                </form>
           </div>
             <div class="col-md-8 text-dark">
                

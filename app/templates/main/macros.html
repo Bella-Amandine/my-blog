@@ -45,7 +45,7 @@
         <small class="text-muted">{{ comment.published_at}}</small>
 
         {% if current_user_email == writer_email %}
-        <a href="" class="btn">Delete Comment </a>
+        <a href="{{url_for('main.delete_comment', id = comment.id)}}" class="btn">Delete Comment </a>
         {% endif %}
     </li>
 

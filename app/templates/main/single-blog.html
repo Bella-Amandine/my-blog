@@ -24,7 +24,18 @@
          <div class="row">
              <div class="col-md-6">
                      <div class="card">
-                         <img src="https://source.unsplash.com/random/300x200" alt="" class="img-fluid card-img-top">
+                         {% if blog.blog_pic_path %}
+                         <img src="{{url_for('static', filename=blog.blog_pic_path)}}" alt="blog picture" class="img-fluid card-img-top">
+                         {% else %}
+                         <img src="https://source.unsplash.com/random/300x200" alt="random picture" class="img-fluid card-img-top">
+                         {% endif %}
+
+                         {% if blog.writer.email == current_user.email %}
+                         <form action="{{url_for('main.update_blog_pic', id=blog.id)}}" method="POST" enctype="multipart/form-data">
+                            <input type="file" name="photo" class="form-control" required>
+                            <input type="submit" value="Submit">
+                        </form>
+                        {% endif %}
                          <div class="card-body">
                              <h4 class="card-title">{{ blog.blog_title }}</h4>
                              <small class="text-muted">Written by {{blog.writer.fullname}} on {{blog.posted_date}}</small>

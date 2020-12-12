@@ -1,5 +1,5 @@
-from flask import render_template, redirect, url_for, abort
-from .. import db
+from flask import render_template, redirect, url_for, abort, request
+from .. import db, photos
 from . import main
 from ..models import Blog, Comment, Writer
 from flask_login import login_required, current_user
@@ -25,9 +25,24 @@ def writer_profile(uname):
     
     writer_blogs = writer.blogs
 
-    return render_template("profile/profile.html", writer = writer, blogs = writer_blogs)
+    return render_template('profile/profile.html', writer = writer, blogs = writer_blogs)
 
-@main.route('/user/profile/update/<uname>', methods = ["GET"])
+@main.route('/writer/update/profile/pic/<uname>', methods = ["POST"])
+@login_required
+def update_writer_pic(uname):
+
+    writer = Writer.query.filter_by(email = uname).first()
+
+    if 'photo' in request.files:
+        filename = photos.save(request.files['photo'])
+        path = 'photos/' + filename
+        writer.profile_pic_path = path
+
+        db.session.commit()
+
+    return redirect(url_for('.writer_profile', uname = writer.email))
+
+@main.route('/user/profile/update/<uname>', methods = ["GET", "POST"])
 @login_required
 def update_profile(uname):
     writer = Writer.query.filter_by(email = uname).first()
@@ -44,9 +59,9 @@ def update_profile(uname):
 
         return redirect(url_for('.writer_profile', uname = writer.email))
 
-    return render_template('profile/update-profile-form.html', update_form = form)
+    return render_template('profile/update-profile-form.html', update_profile_form = form)
+     
     
-
 @main.route('/blog/new', methods = ['GET', 'POST'])
 @login_required
 def save_new_blog():
@@ -61,6 +76,19 @@ def save_new_blog():
 
     return render_template('main/new-blog.html', blog_form = form)
 
+@main.route('/blog/update/pic/<int:id>', methods = ["POST"])
+@login_required
+def update_blog_pic(id):
+    blog = Blog.query.filter_by(id = id).first()
+
+    if 'photo' in request.files:
+        filename = photos.save(request.files['photo'])
+        path = 'photos/' + filename
+        blog.blog_pic_path = path
+
+        db.session.commit()
+    
+    return redirect(url_for('.display_single_blog', id = blog.id))
 
 @main.route('/blog/all', methods = ["GET"])
 def get_all_blogs():
@@ -138,3 +166,13 @@ def add_comment(id):
             abort(404)
     
     return render_template('main/comment-form.html', comment_form = form)
+
+
+@main.route('/comment/delete/<int:id>', methods = ['GET'])
+@login_required
+def delete_comment(id):
+    comment = Comment.get_comment_by_id(id)
+    blog_id = comment.blog_id
+    comment.delete_comment()
+
+    return redirect(url_for('.display_single_blog', id = blog_id))
